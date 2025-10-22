@@ -1,0 +1,27 @@
+Copyright (C) 2025 Simon Rehn.
+See the end of the file for license conditions.
+
+
+yam is a simple windowing interface with the goal of being easy to
+interface with from other languages (with Common Lisp in mind).
+Currently yam uses SDL3 internally however in the future custom
+platform code may be added in the future.
+
+The yam interface is not stable yet, but the goal is to have
+a simple, stable and consistent interface (whatever that means).
+
+
+This file is part of yam.
+
+yam is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+yam is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with yam.  If not, see <https://www.gnu.org/licenses/>.
