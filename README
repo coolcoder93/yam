@@ -4,8 +4,8 @@ See the end of the file for license conditions.
 
 yam is a simple windowing interface with the goal of being easy to
 interface with from other languages (with Common Lisp in mind).
-Currently yam uses SDL3 internally however in the future custom
-platform code may be added in the future.
+Currently yam uses SDL3 internally however custom platform code
+may be added in the future.
 
 The yam interface is not stable yet, but the goal is to have
 a simple, stable and consistent interface (whatever that means).
