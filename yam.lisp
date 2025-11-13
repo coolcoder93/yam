@@ -52,12 +52,6 @@
                      (yam-error-code condition)
                      (yam-error-message condition)))))
 
-(defun yam-true-p (bool)
-  (= bool 1))
-
-(defun yam-false-p (bool)
-  (= bool 0))
-
 ;; TODO: Change this when build system is added
 (cffi:define-foreign-library libyam
   (t (:default "libyam")))
@@ -88,6 +82,12 @@
   (a :unsigned-char))
 
 (cffi:defcfun ("yam_poll_event" yam_poll_event) :int)
+
+(defun yam-true-p (bool)
+  (= bool 1))
+
+(defun yam-false-p (bool)
+  (= bool 0))
 
 (defun %yam-error ()
   (error 'yam-error :message (yam-get-error)
