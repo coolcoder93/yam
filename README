@@ -10,6 +10,8 @@ may be added in the future.
 The yam interface is not stable yet, but the goal is to have
 a simple, stable and consistent interface (whatever that means).
 
+Currently there is no build system in place.
+
 
 This file is part of yam.
 
