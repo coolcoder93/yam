@@ -37,20 +37,12 @@
 (defconstant +event-none+ 0)
 (defconstant +event-quit+ 1)
 
-(defmacro with-yam-library (&body body)
+(defmacro with-window ((title width height) &body body)
   `(unwind-protect
         (progn
-          (cffi:use-foreign-library libyam)
+          (yam::create-window ,title ,width ,height)
           ,@body)
-     (cffi:close-foreign-library 'libyam)))
-
-(defmacro with-window ((title width height) &body body)
-  `(with-yam-library
-     (unwind-protect
-          (progn
-            (yam::create-window ,title ,width ,height)
-            ,@body)
-       (yam::destroy-window))))
+     (yam::destroy-window)))
 
 (define-condition yam-error (error)
   ((code :initarg :code :reader yam-error-code)
@@ -60,18 +52,16 @@
                      (yam-error-code condition)
                      (yam-error-message condition)))))
 
-(defun yam-error ()
-  (error 'yam-error :message (yam-get-error)
-                    :code (yam-get-error-code)))
-
 (defun yam-true-p (bool)
   (= bool 1))
 
 (defun yam-false-p (bool)
   (= bool 0))
 
+;; TODO: Change this when build system is added
 (cffi:define-foreign-library libyam
   (t (:default "libyam")))
+(cffi:use-foreign-library libyam)
 
 (cffi:defctype yam-bool :int)
 
@@ -99,29 +89,32 @@
 
 (cffi:defcfun ("yam_poll_event" yam_poll_event) :int)
 
+(defun %yam-error ()
+  (error 'yam-error :message (yam-get-error)
+                    :code (yam-get-error-code)))
+
+(defmacro yam-check (form &optional &key (predicate #'yam-true-p))
+  (let ((result (gensym)))
+    `(let ((,result ,form))
+       (unless (funcall ,predicate ,result)
+         (%yam-error)))))
+
 (defun create-window (title width height)
-  (when (yam-false-p (yam_create_window title width height))
-    (yam-error)))
+  (yam-check (yam_create_window title width height)))
 
 (defun destroy-window ()
-  (let ((result (yam_destroy_window)))
-    (when (yam-false-p result)
-      (yam-error))))
+  (yam-check (yam_destroy_window)))
 
 (defun clear-window ()
-  (when (yam-false-p (yam_clear_window))
-    (yam-error)))
+  (yam-check (yam_clear_window)))
 
 (defun present-window ()
-  (when (yam-false-p (yam_present_window))
-    (yam-error)))
+  (yam-check (yam_present_window)))
 
 (defun set-pixel-color (x y r g b a)
-  (when (yam-false-p (yam_set_pixel_color x y r g b a))
-    (yam-error)))
+  (yam-check (yam_set_pixel_color x y r g b a)))
 
 (defun poll-event ()
   (let ((result (yam_poll_event)))
-    (when (= result -1)
-      (yam-error))
+    (yam-check result :predicate (lambda (result) (/= result -1)))
     result))
